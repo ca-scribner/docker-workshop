@@ -1,0 +1,20 @@
+version: '3'
+services:
+  dash:
+      build: ./dash/
+      ports:
+          - 80:80
+      links:
+          - mlapi
+      volumes:
+          - ./dash/src:/src
+          - ./data:/data
+
+  mlapi:
+      build: ./mlapi
+      expose:
+          - 9000
+      volumes:
+          - ./ml/src:/src
+          - ./ml/model:/model
+          - ./data:/data

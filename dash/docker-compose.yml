@@ -1,0 +1,9 @@
+version: '3'
+services:
+  dash:
+      image: dashapp
+      ports:
+          - 8000:8888
+      volumes:
+          - ./app:/app
+          - ../data:/data
