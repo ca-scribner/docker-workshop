@@ -1,9 +1,9 @@
 version: '3'
 services:
   dash:
-      build: ./dash/
+      image: dashapp
       ports:
-          - 80:80
+          - 8888:8888
       links:
           - mlapi
       volumes:
@@ -11,9 +11,9 @@ services:
           - ./data:/data
 
   mlapi:
-      build: ./mlapi
+      image: mlapi
       expose:
-          - 9000
+          - 8000
       volumes:
           - ./ml/src:/src
           - ./ml/model:/model

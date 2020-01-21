@@ -9,6 +9,7 @@ RUN pip3 install dash-renderer
 RUN pip3 install dash-html-components
 RUN pip3 install dash-core-components
 RUN pip3 install plotly --upgrade
+RUN pip3 install requests
 #RUN pip3 install fastapi
 
 #CMD ["tail", "-F", "/dev/null"]

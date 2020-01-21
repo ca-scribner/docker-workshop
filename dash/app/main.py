@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+# https://docs.faculty.ai/user-guide/apps/examples/dash_file_upload_download.html
+# https://www.roytuts.com/python-flask-rest-api-file-upload/
+
 import base64
 import os
+import requests
 from urllib.parse import quote as urlquote
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -90,11 +94,10 @@ def uploaded_files():
     return files
 
 
-def file_download_link(filename):
+def file_download_link(filename, label):
     """Create a Plotly Dash 'A' element that downloads a file from the app."""
     location = "/download/{}".format(urlquote(filename))
-    return html.A(filename, href=location)
-
+    return html.A(label + ' - ' + filename, href=location)
 
 @app.callback(
     Output("file-list", "children"),
@@ -103,17 +106,31 @@ def file_download_link(filename):
 def update_output(uploaded_filenames, uploaded_file_contents):
     """Save uploaded files and regenerate the file list."""
 
-    if uploaded_filenames is not None and uploaded_file_contents is not None:
-        for name, data in zip(uploaded_filenames, uploaded_file_contents):
-            save_file(name, data)
+    messages = [
+        {"filename" : name, "image" : data }
+        for name, data in zip(uploaded_filenames, uploaded_file_contents)
+    ]
 
-    files = uploaded_files()
-    if not files:
+    for m in messages:
+        save_file(m['filename'], m['image'])
+
+    api_calls = [
+        requests.post(host="0.0.0.0:8000", data=m)
+        for m in messages
+    ]
+
+    labels = [
+        call.content if call.status_code == 200 else "API call failed"
+        for call in labels
+    ]
+    
+    if not labels:
         return [html.Li("No files yet!")]
     else:
-        return [html.Li(file_download_link(filename)) for filename in files]
-
+        return [
+            html.Li( file_download_link(label['filename'], label['label']) )
+            for label in labels
+        ]
 
 if __name__ == "__main__":
     app.run_server(debug=True, host="0.0.0.0", port=8888)
-

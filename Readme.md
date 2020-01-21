@@ -23,7 +23,19 @@ Suggestions
 CMD ["python3", "/app/main.py"] 
 ```
 
-2. Use this base image for the mlapi
+**Run this on on port 8888**
+
+
+2. Run the mlapi app with 
+
+```
+CMD ["python3", "/app/api.py"] 
+```
+
+**Run this on on port 8000**
+
+
+3. Use this base image for the mlapi
 
 ```
 frolvlad/alpine-python-machinelearning
