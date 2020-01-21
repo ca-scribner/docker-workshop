@@ -110,25 +110,38 @@ def file_download_link(filename, label):
 def update_output(uploaded_filenames, uploaded_file_contents):
     """Save uploaded files and regenerate the file list."""
 
+    if not uploaded_filenames is None and not uploaded_file_contents is None:
+        files = zip(uploaded_filenames, uploaded_file_contents)
+    else:
+        files = []
+        
+    
     messages = [
-        {"filename" : name, "image" : data }
-        for name, data in zip(uploaded_filenames, uploaded_file_contents)
+        {"filename" : name, "image" : str(data) }
+        for name, data in files
     ]
 
     for m in messages:
         save_file(m['filename'], m['image'])
 
     api_calls = [
-        requests.post(host="0.0.0.0:8000", data=m)
+        requests.post(url="http://mlapi:8000/guess", json=m)
         for m in messages
     ]
 
+    with open('/errors', 'w') as f:
+        for c in api_calls:
+            if c.status_code == 200:
+                f.write(str(c) + '\n')
+
     labels = [
-        call.content if call.status_code == 200 else "API call failed"
-        for call in labels
+        call.content if call.status_code == 200 else None
+        for call in api_calls
     ]
+
+    labels = list(filter(None, labels))
     
-    if not labels:
+    if len(labels) == 0:
         return [html.Li("No files yet!")]
     else:
         return [

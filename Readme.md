@@ -14,6 +14,18 @@ for classification.
 The python code is provided; the exercise is to write the Dockerfiles and
 docker-compose.yml file that tie the system together
 
+
+Getting Started
+---------------
+
+1. Install Docker
+
+- Windows: go to [the docker toolbox downloads](github.com/docker/toolbox/releases)
+- Ubuntu: [download instructions](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
+- Redhat: [download instructions](https://www.cyberciti.biz/faq/install-use-setup-docker-on-rhel7-centos7-linux/)
+
+2. Download this repository.
+
 Suggestions
 -----------
 

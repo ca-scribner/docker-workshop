@@ -3,17 +3,17 @@ services:
   dash:
       image: dashapp
       ports:
-          - 8888:8888
-      links:
-          - mlapi
+        - 8888:8888
       volumes:
-          - ./dash/app:/app
-          - ./data:/data
+        - ./dash/app:/app
+        - ./data:/data
   mlapi:
       image: mlapi
       expose:
-          - 8000
+        - 8000
+      ports:
+        - 8000:8000
       volumes:
-          - ./ml/src:/src
-          - ./ml/model:/model
-          - ./data:/data
+        - ./mlapi/src:/app
+        - ./mlapi/model:/model
+        - ./data:/data
