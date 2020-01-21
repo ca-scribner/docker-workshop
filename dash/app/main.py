@@ -17,6 +17,10 @@ from dash.dependencies import Input, Output
 UPLOAD_DIRECTORY = "/data/"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
+
+IMAGES_DIRECTORY = UPLOAD_DIRECTORY+'images'
+if not os.path.exists(IMAGES_DIRECTORY):
+    os.makedirs(IMAGES_DIRECTORY)
     
 external_stylesheets = [
     'https://codepen.io/chriddyp/pen/bWLwgP.css',
@@ -81,14 +85,14 @@ app.layout = html.Div([
 def save_file(name, content):
     """Decode and store a file uploaded with Plotly Dash."""
     data = content.encode("utf8").split(b";base64,")[1]
-    with open(os.path.join(UPLOAD_DIRECTORY, name), "wb") as fp:
+    with open(os.path.join(IMAGES_DIRECTORY, name), "wb") as fp:
         fp.write(base64.decodebytes(data))
 
 def uploaded_files():
     """List the files in the upload directory."""
     files = []
-    for filename in os.listdir(UPLOAD_DIRECTORY):
-        path = os.path.join(UPLOAD_DIRECTORY, filename)
+    for filename in os.listdir(IMAGES_DIRECTORY):
+        path = os.path.join(IMAGES_DIRECTORY, filename)
         if os.path.isfile(path):
             files.append(filename)
     return files
@@ -96,7 +100,7 @@ def uploaded_files():
 
 def file_download_link(filename, label):
     """Create a Plotly Dash 'A' element that downloads a file from the app."""
-    location = "/download/{}".format(urlquote(filename))
+    location = "{}/{}".format(IMAGES_DIRECTORY, urlquote(filename))
     return html.A(label + ' - ' + filename, href=location)
 
 @app.callback(

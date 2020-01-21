@@ -5,5 +5,4 @@ ENV LIBRARY_PATH=/lib:/usr/lib
 RUN pip3 install pillow
 RUN pip3 install fastapi
 
-
 CMD ["python3", "/app/api.py"]

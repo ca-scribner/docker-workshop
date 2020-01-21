@@ -7,9 +7,8 @@ services:
       links:
           - mlapi
       volumes:
-          - ./dash/src:/src
+          - ./dash/app:/app
           - ./data:/data
-
   mlapi:
       image: mlapi
       expose:
