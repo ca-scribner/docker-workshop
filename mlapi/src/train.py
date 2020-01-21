@@ -53,6 +53,5 @@ pixels, labels = zip(*[ (p,l) for (p,l) in zip(pixels, labels) if p is not None 
 
 clf = clf.fit(pixels, labels)
 
-from pickle import dump
-with open('clf.pickle', 'wb') as f:
-    dump(clf, f)
+from joblib import dump
+dump(clf, "/model/clf.joblib")

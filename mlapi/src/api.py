@@ -22,3 +22,7 @@ async def classify(request: Request, file: bytes=File(...)):
     return {
         item.name : cat_or_dog(image.content)
     }
+
+if __name__ == "__main__":    
+    app.run_server(debug=True, host="0.0.0.0", port=8888)
+

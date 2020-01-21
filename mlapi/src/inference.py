@@ -22,11 +22,12 @@ from sklearn.svm import LinearSVC, SVC
 from subprocess import check_output
 #print(check_output(["ls", "../input"]).decode("utf8"))
 
-from pickle import load
-clf = load('/model/clf.pickle')
+from joblib import load
+clf = load('/model/clf.joblib')
 
 def cat_or_dog(bs):
-    image = Image.open(io.BytesIO(bs)).convert('L')
+    # image = Image.open(io.BytesIO(bs)).convert('L')
+    image = Image.open(bs)
     size=64,64
     pil_im = pil_im.resize(size, Image.ANTIALIAS)
     #pil_im =pil_im.filter(ImageFilter.FIND_EDGES)
