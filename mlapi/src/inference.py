@@ -27,11 +27,15 @@ clf = load('/model/clf.joblib')
 
 def cat_or_dog(bs):
     # image = Image.open(io.BytesIO(bs)).convert('L')
-    image = Image.open(bs)
+    pil_im = Image.open(open(bs, 'rb')).convert('L')
     size=64,64
     pil_im = pil_im.resize(size, Image.ANTIALIAS)
     #pil_im =pil_im.filter(ImageFilter.FIND_EDGES)
     pil_im=pil_im.filter(ImageFilter.GaussianBlur(255))
     pix_val=pil_im.histogram()     
-    return clf.predict_proba([pix_val])
+    result = clf.predict([pix_val])
+    if result < 0.5:
+        return "Cat"
+    else:
+        return "Dog"
 
