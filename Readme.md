@@ -1,6 +1,10 @@
 Docker Workshop
 ===============
 
+Written for Statistics Canada 
+
+*Blair Drummond, January 2020*
+
 Exercise
 --------
 
@@ -15,11 +19,14 @@ Suggestions
 
 1. Run the dash app with
 
-> CMD ["python3", "/app/main.py"] 
-
+```
+CMD ["python3", "/app/main.py"] 
+```
 
 2. Use this base image for the mlapi
 
-> frolvlad/alpine-python-machinelearning
+```
+frolvlad/alpine-python-machinelearning
+```
 
 You'll want to install `fastapi`.
