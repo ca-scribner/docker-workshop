@@ -5,9 +5,8 @@
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 import io
-import base64
-import os
 from inference import cat_or_dog
+from base64 import b64decode
 
 app = FastAPI()
 
@@ -21,9 +20,8 @@ def read_root():
 
 @app.post("/guess/")
 async def classify(image: Image):
-    fname = '/tmp_' + image.filename
-    with open(fname, 'w') as f:
-        f.write(image.image.split(';base64,')[1])
-    response = {image.filename : cat_or_dog(fname)}
-    os.remove(fname)
-    return response
+    im = image.image.split(';base64,')[1]
+    return {
+        'filename' : image.filename, 
+        'label' : cat_or_dog(b64decode(im))
+    }

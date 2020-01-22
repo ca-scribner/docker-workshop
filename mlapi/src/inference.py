@@ -26,8 +26,8 @@ from joblib import load
 clf = load('/model/clf.joblib')
 
 def cat_or_dog(bs):
-    # image = Image.open(io.BytesIO(bs)).convert('L')
-    pil_im = Image.open(bs).convert('L')
+    #pil_im = Image.frombytes(io.BytesIO(bs)).convert('L')
+    pil_im = Image.open(io.BytesIO(bs)).convert('L')
     size=64,64
     pil_im = pil_im.resize(size, Image.ANTIALIAS)
     #pil_im =pil_im.filter(ImageFilter.FIND_EDGES)

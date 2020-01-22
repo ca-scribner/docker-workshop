@@ -58,7 +58,7 @@ app.layout = html.Div([
         # Allow multiple files to be uploaded
         multiple=True
     ),
-    html.H2("File List"),
+    html.H2("Files"),
     html.Ul(id="file-list"),
     html.H2("This graph could be a histogram of cats/dogs, if I knew Dash."),
     dcc.Graph(
@@ -77,10 +77,10 @@ app.layout = html.Div([
 ], style={'max-width': '1000px', 'margin' : '0 auto'})
 
 
-# @server.route("/download/<path:path>")
-# def download(path):
-#     """Serve a file from the upload directory."""
-#     return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
+@server.route(IMAGES_DIRECTORY + "<path:path>")
+def download(path):
+    """Serve a file from the upload directory."""
+    return app.send_from_directory(IMAGES_DIRECTORY, path)
 
 def save_file(name, content):
     """Decode and store a file uploaded with Plotly Dash."""
@@ -101,7 +101,7 @@ def uploaded_files():
 def file_download_link(filename, label):
     """Create a Plotly Dash 'A' element that downloads a file from the app."""
     location = "{}/{}".format(IMAGES_DIRECTORY, urlquote(filename))
-    return html.A(label + ' - ' + filename, href=location)
+    return html.A(label + ' - ' + filename, href=location, target="_blank")
 
 @app.callback(
     Output("file-list", "children"),
@@ -135,7 +135,7 @@ def update_output(uploaded_filenames, uploaded_file_contents):
                 f.write(str(c) + '\n')
 
     labels = [
-        call.content if call.status_code == 200 else None
+        call.json() if call.status_code == 200 else None
         for call in api_calls
     ]
 
