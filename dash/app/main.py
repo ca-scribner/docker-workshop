@@ -7,12 +7,13 @@ import base64
 import os
 import requests
 from urllib.parse import quote as urlquote
-
 from flask import Flask, send_from_directory, request
+#from flask_caching import Cache
 import dash
+import plotly.graph_objs as go
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 UPLOAD_DIRECTORY = "/data/"
 if not os.path.exists(UPLOAD_DIRECTORY):
@@ -29,8 +30,9 @@ external_stylesheets = [
 
 # Normally, Dash creates its own Flask server internally. By creating our own,
 # we can create a route for downloading files directly:
-server = Flask(__name__) # use mienheld instead
+server = Flask(__name__, static_folder='/data/images') # use mienheld instead
 app = dash.Dash(server=server, external_stylesheets=external_stylesheets)
+
 
 colors = {
     "graphBackground": "#F5F5F5",
@@ -38,11 +40,14 @@ colors = {
     "text": "#000000"
 }
 
+
 app.layout = html.Div([
+    html.H1("ULTRA ADVANCED CAT V.S. DOG IDENTIFIER."),
+    html.H2("Patent Pending."),
     dcc.Upload(
         id='upload-data',
         children=html.Div([
-            'Drag and Drop or ',
+            'Drag and Drop images of cats or dogs, or ',
             html.A('Select Files')
         ]),
         style={
@@ -59,28 +64,18 @@ app.layout = html.Div([
         multiple=True
     ),
     html.H2("Files"),
+    dcc.Store(id='files-db', storage_type='session'),
     html.Ul(id="file-list"),
-    html.H2("This graph could be a histogram of cats/dogs, if I knew Dash."),
-    dcc.Graph(
-        id='cats-dogs',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    ),
+    dcc.Graph(id='cats-dogs'),
     html.Div(id='output-data-upload')
 ], style={'max-width': '1000px', 'margin' : '0 auto'})
 
 
-@server.route(IMAGES_DIRECTORY + "<path:path>")
-def download(path):
+@server.route("/data/images/<path:filename>")
+def download(filename):
     """Serve a file from the upload directory."""
-    return app.send_from_directory(IMAGES_DIRECTORY, path)
+    return send_from_directory(directory='/data/images', filename=filename)
+    #return send_from_directory(directory='/data/images', filename=filename, as_attachment=True)
 
 def save_file(name, content):
     """Decode and store a file uploaded with Plotly Dash."""
@@ -103,19 +98,23 @@ def file_download_link(filename, label):
     location = "{}/{}".format(IMAGES_DIRECTORY, urlquote(filename))
     return html.A(label + ' - ' + filename, href=location, target="_blank")
 
+
 @app.callback(
-    Output("file-list", "children"),
+    Output("files-db", "data"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")],
+    [State('files-db', 'data')]
 )
-def update_output(uploaded_filenames, uploaded_file_contents):
+def update_db_disk(uploaded_filenames, uploaded_file_contents, data):
     """Save uploaded files and regenerate the file list."""
 
+    if data is None:
+        data = {}
+    
     if not uploaded_filenames is None and not uploaded_file_contents is None:
         files = zip(uploaded_filenames, uploaded_file_contents)
     else:
         files = []
         
-    
     messages = [
         {"filename" : name, "image" : str(data) }
         for name, data in files
@@ -139,15 +138,54 @@ def update_output(uploaded_filenames, uploaded_file_contents):
         for call in api_calls
     ]
 
-    labels = list(filter(None, labels))
     
-    if len(labels) == 0:
+    labels = list(filter(None, labels))
+
+    for d in labels:
+        data[d['filename']] = d['label']
+    
+    return data
+
+
+@app.callback(
+    Output("file-list", "children"),
+    [Input("files-db", "data")],
+)
+def update_list(labels):
+    """ File list. """
+
+    if labels is None or len(labels) == 0:
         return [html.Li("No files yet!")]
     else:
         return [
-            html.Li( file_download_link(label['filename'], label['label']) )
-            for label in labels
+            html.Li( file_download_link(f, labels[f]) )
+            for f in labels
         ]
+
+
+@app.callback(
+    Output("cats-dogs", "figure"),
+    [Input("files-db", "data")],
+)
+def update_graph(labels):
+    """ Histogram of current files """
+    if labels is None:
+        labels = {}
+    
+
+    hist = go.Histogram(
+        x = list(labels.values()),
+        marker = {'colorscale': 'Viridis'},
+        name = 'Cats v.s. Dogs'
+    )
+
+    return {
+        'data': [hist],
+        'layout': go.Layout(title='Cats v.s. Dogs'),
+    }
+
+ 
+    
 
 if __name__ == "__main__":
     app.run_server(debug=True, host="0.0.0.0", port=8888)
