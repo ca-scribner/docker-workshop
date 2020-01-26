@@ -24,33 +24,17 @@ Getting Started
 - Ubuntu: [download instructions](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
 - Redhat: [download instructions](https://www.cyberciti.biz/faq/install-use-setup-docker-on-rhel7-centos7-linux/)
 
-2. Download this repository.
+2. Install docker-compose with `pip install --user docker-compose`
 
-Suggestions
------------
+3. Download this repository. 
 
-1. Run the dash app with
+Exercises
+---------
 
-```
-CMD ["python3", "/app/main.py"] 
-```
+1. Try to run the dash app with `docker-compose up`...
 
-**Run this on on port 8888**
+Then test the app on `localhost:8888`
 
+2. Try to come up with a new model for the classification and integrate it.
 
-2. Run the mlapi app with 
-
-```
-CMD ["python3", "/app/api.py"] 
-```
-
-**Run this on on port 8000**
-
-
-3. Use this base image for the mlapi
-
-```
-frolvlad/alpine-python-machinelearning
-```
-
-You'll want to install `fastapi`.
+3. How would you make the storage persistent?
