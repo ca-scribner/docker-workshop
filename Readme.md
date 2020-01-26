@@ -38,3 +38,5 @@ Then test the app on `localhost:8888`
 2. Try to come up with a new model for the classification and integrate it.
 
 3. How would you make the storage persistent?
+
+4. **HARD:** Figure out how to use a production-grade webserver (`uwsgi` or `gunicorn`)
