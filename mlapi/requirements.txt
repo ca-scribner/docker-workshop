@@ -1,0 +1,8 @@
+fastapi
+pydantic
+scipy
+numpy
+scikit-learn
+Pillow
+# uvicorn needs gcc
+uvicorn
