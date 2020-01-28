@@ -14,6 +14,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
+# Data directory is placed where we run main.py
 UPLOAD_DIRECTORY = "./data/"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
