@@ -7,8 +7,8 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - "./dash/data:/app/dash/data"
-      - "./dash/app:/app/dash/app"
+      - ./dash/src:/app/src
+      - ./dash/data:/app/data
   mlapi:
     build:
       context: ./mlapi/
@@ -16,4 +16,5 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - "./mlapi/:/app/mlapi"
+      - ./mlapi/src:/app/src
+      - ./mlapi/model:/app/model

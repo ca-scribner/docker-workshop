@@ -15,6 +15,10 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 # Data directory is placed where we run main.py
+# Could also do something like:
+#   UPLOAD_DIRECTORY = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+# which puts the directory relative to our source files when they're running.
+# This path could also be specified by an environment variable
 UPLOAD_DIRECTORY = "./data/"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)

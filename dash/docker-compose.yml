@@ -7,5 +7,5 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - ./app:/app/dash/app
-      - ./data:/app/dash/data
+      - ./src:/app/src
+      - ./data:/app/data
