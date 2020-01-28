@@ -1,9 +1,11 @@
 version: '3'
 services:
   dash:
-      image: dashapp
-      ports:
-          - 8000:8888
-      volumes:
-          - ./app:/app
-          - ../data:/data
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./app:/app/dash/app
+      - ./data:/app/dash/data

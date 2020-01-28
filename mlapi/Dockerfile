@@ -1,10 +1,17 @@
-FROM frolvlad/alpine-python-machinelearning
+FROM python:3.8.1-buster
 
-RUN apk add build-base jpeg-dev zlib-dev python3-dev  
-ENV LIBRARY_PATH=/lib:/usr/lib
-RUN pip3 install pillow
-RUN pip3 install fastapi
-RUN pip3 install uvicorn
+# RUN pip install --upgrade pip
 
-WORKDIR /app
-CMD [ "uvicorn", "api:app", "--reload", "--host", "0.0.0.0", "--port", "8000" ]
+WORKDIR /app/mlapi
+
+COPY ./requirements.txt ./
+
+RUN pip install -r requirements.txt
+
+# I could copy the code in here, but instead I'm setting this with volumes in docker-compose/docker run
+# eg: docker run -v (pwd):/app/mlapi imagename
+# COPY ./src ./src
+# COPY ./model ./model
+
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
+# CMD ["python", "main.py"]

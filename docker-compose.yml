@@ -1,19 +1,19 @@
 version: '3'
 services:
   dash:
-      image: dashapp
-      ports:
-        - 8888:8888
-      volumes:
-        - ./dash/app:/app
-        - ./data:/data
+    build: 
+      context: ./dash/
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - "./dash/data:/app/dash/data"
+      - "./dash/app:/app/dash/app"
   mlapi:
-      image: mlapi
-      expose:
-        - 8000
-      ports:
-        - 8000:8000
-      volumes:
-        - ./mlapi/src:/app
-        - ./mlapi/model:/model
-        - ./data:/data
+    build:
+      context: ./mlapi/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./mlapi/:/app/mlapi"

@@ -22,8 +22,12 @@ from sklearn.svm import LinearSVC, SVC
 from subprocess import check_output
 #print(check_output(["ls", "../input"]).decode("utf8"))
 
+# Could set this as an environment variable.  In here we could have a use env var else use default
+MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'model', 'clf.joblib'))
+
 from joblib import load
-clf = load('/model/clf.joblib')
+print(f"Loading model from {MODEL_PATH}")
+clf = load(MODEL_PATH)
 
 def cat_or_dog(bs):
     #pil_im = Image.frombytes(io.BytesIO(bs)).convert('L')
@@ -38,4 +42,3 @@ def cat_or_dog(bs):
         return "Cat"
     else:
         return "Dog"
-

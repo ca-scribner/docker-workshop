@@ -1,13 +1,10 @@
 version: '3'
 services:
-  ml:
-    image: mlapi
-    volumes:
-      - ./src:/app
-      - ./model:/model
-      - ./training_data:/training_data
-    entrypoint: /bin/sh
-    stdin_open: true
-    tty: true
+  mlapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 8000:8888
+      - "8000:8000"
+    volumes:
+      - .:/app/mlapi
